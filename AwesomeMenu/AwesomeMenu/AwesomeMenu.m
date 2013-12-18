@@ -301,8 +301,14 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
                                  [NSValue valueWithCGPoint:item.nearPoint],
                                  [NSValue valueWithCGPoint:item.endPoint]];
     
+    CABasicAnimation *alphaAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnimation.duration = animationDuration;
+    alphaAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    alphaAnimation.fromValue = @(0.f);
+    alphaAnimation.toValue = @(1.f);
+
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
-    animationgroup.animations = @[positionAnimation, rotateAnimation];
+    animationgroup.animations = @[positionAnimation, rotateAnimation, alphaAnimation];
     animationgroup.duration = animationDuration;
     animationgroup.fillMode = kCAFillModeForwards;
     animationgroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
@@ -311,6 +317,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         [animationgroup setValue:@"firstAnimation" forKey:@"id"];
     }
     
+    item.layer.opacity = 1.f;
     [item.layer addAnimation:animationgroup forKey:@"Expand"];
     item.center = item.endPoint;
     
@@ -341,9 +348,15 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     positionAnimation.values = @[[NSValue valueWithCGPoint:item.endPoint],
                                  [NSValue valueWithCGPoint:item.farPoint],
                                  [NSValue valueWithCGPoint:item.startPoint]];
-    
+
+    CABasicAnimation *alphaAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    alphaAnimation.duration = animationDuration;
+    alphaAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    alphaAnimation.fromValue = @(1.f);
+    alphaAnimation.toValue = @(0.f);
+
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
-    animationgroup.animations = @[positionAnimation, rotateAnimation];
+    animationgroup.animations = @[positionAnimation, rotateAnimation, alphaAnimation];
     animationgroup.duration = animationDuration;
     animationgroup.fillMode = kCAFillModeForwards;
     animationgroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
@@ -352,6 +365,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         [animationgroup setValue:@"lastAnimation" forKey:@"id"];
     }
     
+    item.layer.opacity = 0.f;
     [item.layer addAnimation:animationgroup forKey:@"Close"];
     item.center = item.startPoint;
 
