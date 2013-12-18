@@ -298,13 +298,10 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     
     CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     positionAnimation.duration = animationDuration;
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, item.startPoint.x, item.startPoint.y);
-    CGPathAddLineToPoint(path, NULL, item.farPoint.x, item.farPoint.y);
-    CGPathAddLineToPoint(path, NULL, item.nearPoint.x, item.nearPoint.y); 
-    CGPathAddLineToPoint(path, NULL, item.endPoint.x, item.endPoint.y); 
-    positionAnimation.path = path;
-    CGPathRelease(path);
+    positionAnimation.values = @[[NSValue valueWithCGPoint:item.startPoint],
+                                 [NSValue valueWithCGPoint:item.farPoint],
+                                 [NSValue valueWithCGPoint:item.nearPoint],
+                                 [NSValue valueWithCGPoint:item.endPoint]];
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
     animationgroup.animations = [NSArray arrayWithObjects:positionAnimation, rotateAnimation, nil];
@@ -346,12 +343,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         
     CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     positionAnimation.duration = animationDuration;
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, item.endPoint.x, item.endPoint.y);
-    CGPathAddLineToPoint(path, NULL, item.farPoint.x, item.farPoint.y);
-    CGPathAddLineToPoint(path, NULL, item.startPoint.x, item.startPoint.y); 
-    positionAnimation.path = path;
-    CGPathRelease(path);
+    positionAnimation.values = @[[NSValue valueWithCGPoint:item.endPoint],
+                                 [NSValue valueWithCGPoint:item.farPoint],
+                                 [NSValue valueWithCGPoint:item.startPoint]];
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
     animationgroup.animations = [NSArray arrayWithObjects:positionAnimation, rotateAnimation, nil];
