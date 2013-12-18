@@ -290,11 +290,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     AwesomeMenuItem *item = (AwesomeMenuItem *)[self viewWithTag:tag];
     
     CAKeyframeAnimation *rotateAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotateAnimation.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:expandRotation],[NSNumber numberWithFloat:0.0f], nil];
+    rotateAnimation.values = @[@(expandRotation), @(0.0f)];
     rotateAnimation.duration = animationDuration;
-    rotateAnimation.keyTimes = [NSArray arrayWithObjects:
-                                [NSNumber numberWithFloat:.3], 
-                                [NSNumber numberWithFloat:.4], nil]; 
+    rotateAnimation.keyTimes = @[@(.3), @(.4)];
     
     CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     positionAnimation.duration = animationDuration;
@@ -304,7 +302,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
                                  [NSValue valueWithCGPoint:item.endPoint]];
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
-    animationgroup.animations = [NSArray arrayWithObjects:positionAnimation, rotateAnimation, nil];
+    animationgroup.animations = @[positionAnimation, rotateAnimation];
     animationgroup.duration = animationDuration;
     animationgroup.fillMode = kCAFillModeForwards;
     animationgroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
@@ -334,13 +332,10 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
      AwesomeMenuItem *item = (AwesomeMenuItem *)[self viewWithTag:tag];
     
     CAKeyframeAnimation *rotateAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
-    rotateAnimation.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0f],[NSNumber numberWithFloat:closeRotation],[NSNumber numberWithFloat:0.0f], nil];
+    rotateAnimation.values = @[@(0.0f), @(closeRotation), @(0.0f)];
     rotateAnimation.duration = animationDuration;
-    rotateAnimation.keyTimes = [NSArray arrayWithObjects:
-                                [NSNumber numberWithFloat:.0], 
-                                [NSNumber numberWithFloat:.4],
-                                [NSNumber numberWithFloat:.5], nil]; 
-        
+    rotateAnimation.keyTimes = @[@(.0), @(.4), @(.5)];
+    
     CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     positionAnimation.duration = animationDuration;
     positionAnimation.values = @[[NSValue valueWithCGPoint:item.endPoint],
@@ -348,7 +343,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
                                  [NSValue valueWithCGPoint:item.startPoint]];
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
-    animationgroup.animations = [NSArray arrayWithObjects:positionAnimation, rotateAnimation, nil];
+    animationgroup.animations = @[positionAnimation, rotateAnimation];
     animationgroup.duration = animationDuration;
     animationgroup.fillMode = kCAFillModeForwards;
     animationgroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
@@ -377,17 +372,17 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 - (CAAnimationGroup *)_blowupAnimationAtPoint:(CGPoint)p
 {
     CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
-    positionAnimation.values = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:p], nil];
-    positionAnimation.keyTimes = [NSArray arrayWithObjects: [NSNumber numberWithFloat:.3], nil]; 
+    positionAnimation.values = @[[NSValue valueWithCGPoint:p]];
+    positionAnimation.keyTimes = @[@(.3)];
     
     CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
     scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(3, 3, 1)];
     
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.toValue  = [NSNumber numberWithFloat:0.0f];
+    opacityAnimation.toValue  = @(0.0f);
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
-    animationgroup.animations = [NSArray arrayWithObjects:positionAnimation, scaleAnimation, opacityAnimation, nil];
+    animationgroup.animations = @[positionAnimation, scaleAnimation, opacityAnimation];
     animationgroup.duration = animationDuration;
     animationgroup.fillMode = kCAFillModeForwards;
 
@@ -397,17 +392,17 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 - (CAAnimationGroup *)_shrinkAnimationAtPoint:(CGPoint)p
 {
     CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
-    positionAnimation.values = [NSArray arrayWithObjects:[NSValue valueWithCGPoint:p], nil];
-    positionAnimation.keyTimes = [NSArray arrayWithObjects: [NSNumber numberWithFloat:.3], nil]; 
+    positionAnimation.values = @[[NSValue valueWithCGPoint:p]];
+    positionAnimation.keyTimes = @[@(.3)];
     
     CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
     scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(.01, .01, 1)];
     
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.toValue  = [NSNumber numberWithFloat:0.0f];
+    opacityAnimation.toValue  = @(0.0f);
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
-    animationgroup.animations = [NSArray arrayWithObjects:positionAnimation, scaleAnimation, opacityAnimation, nil];
+    animationgroup.animations = @[positionAnimation, scaleAnimation, opacityAnimation];
     animationgroup.duration = animationDuration;
     animationgroup.fillMode = kCAFillModeForwards;
     
