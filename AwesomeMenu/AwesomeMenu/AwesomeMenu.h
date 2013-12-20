@@ -34,6 +34,8 @@
 @property (nonatomic, assign) CGFloat closeRotation;
 @property (nonatomic, assign) CGFloat animationDuration;
 
+@property (nonatomic, strong) AwesomeMenuItem *startButton;
+
 - (id)initWithFrame:(CGRect)frame startItem:(AwesomeMenuItem*)startItem optionMenus:(NSArray *)aMenusArray;
 - (void)expand;
 - (void)shrink;
