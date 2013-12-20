@@ -35,6 +35,8 @@
 @property (nonatomic, assign) CGFloat animationDuration;
 
 - (id)initWithFrame:(CGRect)frame startItem:(AwesomeMenuItem*)startItem optionMenus:(NSArray *)aMenusArray;
+- (void)expand;
+- (void)shrink;
 
 @end
 

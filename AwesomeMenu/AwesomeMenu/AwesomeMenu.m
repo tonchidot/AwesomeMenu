@@ -153,12 +153,27 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     self.expanding = !self.isExpanding;
 }
 
+- (void)toggleExpansion
+{
+    self.expanding = !self.isExpanding;
+}
+
+- (void)expand
+{
+    self.expanding = YES;
+}
+
+- (void)shrink
+{
+    self.expanding = NO;
+}
+
 #pragma mark - AwesomeMenuItem delegates
 - (void)AwesomeMenuItemTouchesBegan:(AwesomeMenuItem *)item
 {
     if (item == _startButton) 
     {
-        self.expanding = !self.isExpanding;
+        [self toggleExpansion];
     }
 }
 - (void)AwesomeMenuItemTouchesEnd:(AwesomeMenuItem *)item
@@ -170,6 +185,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     }
     // blowup the selected menu button
     CAAnimationGroup *blowup = [self _blowupAnimationAtPoint:item.center];
+    item.layer.opacity = 0.f;
     [item.layer addAnimation:blowup forKey:@"blowup"];
     item.center = item.startPoint;
     
@@ -181,6 +197,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         if (otherItem.tag == item.tag) {
             continue;
         }
+        otherItem.layer.opacity = 0.f;
         [otherItem.layer addAnimation:shrink forKey:@"shrink"];
 
         otherItem.center = otherItem.startPoint;
@@ -239,6 +256,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         CGPoint farPoint = CGPointMake(startPoint.x + farRadius * sinf(i * menuWholeAngle / (count - 1)), startPoint.y - farRadius * cosf(i * menuWholeAngle / (count - 1)));
         item.farPoint = RotateCGPointAroundCenter(farPoint, startPoint, rotateAngle);  
         item.center = item.startPoint;
+        item.layer.opacity = 0.f;
         item.delegate = self;
 		[self insertSubview:item belowSubview:_startButton];
     }
@@ -248,13 +266,16 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 {
     return _expanding;
 }
+
 - (void)setExpanding:(BOOL)expanding
 {
+	if (_expanding == expanding) {
+		return;
+	}
 	if (expanding) {
 		[self _setMenu];
 	}
-	
-    _expanding = expanding;    
+    _expanding = expanding;
     
     // rotate add button
     float angle = self.isExpanding ? -M_PI_4 : 0.0f;
@@ -390,9 +411,10 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     positionAnimation.keyTimes = @[@(.3)];
     
     CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(3, 3, 1)];
+    scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(2, 2, 1)];
     
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.fromValue  = @(1.0f);
     opacityAnimation.toValue  = @(0.0f);
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
@@ -413,6 +435,8 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     scaleAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(.01, .01, 1)];
     
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+    opacityAnimation.fromValue  = @(1.0f);
     opacityAnimation.toValue  = @(0.0f);
     
     CAAnimationGroup *animationgroup = [CAAnimationGroup animation];
