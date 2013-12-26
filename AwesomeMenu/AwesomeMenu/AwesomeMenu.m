@@ -171,16 +171,12 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 #pragma mark - AwesomeMenuItem delegates
 - (void)AwesomeMenuItemTouchesBegan:(AwesomeMenuItem *)item
 {
-    if (item == _startButton) 
-    {
-        [self toggleExpansion];
-    }
 }
 - (void)AwesomeMenuItemTouchesEnd:(AwesomeMenuItem *)item
 {
-    // exclude the "add" button
     if (item == _startButton) 
     {
+        [self toggleExpansion];
         return;
     }
     // blowup the selected menu button
@@ -269,6 +265,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 
 - (void)setExpanding:(BOOL)expanding
 {
+	// toggle menu on tapping start button
 	if (_expanding == expanding) {
 		return;
 	}
