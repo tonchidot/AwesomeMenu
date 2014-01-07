@@ -131,14 +131,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 #pragma mark - UIView's methods
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
 {
-    // if the menu is animating, prevent touches
-    if (_isAnimating) 
-    {
-        return NO;
-    }
-    // if the menu state is expanding, everywhere can be touch
+    // if the menu state is expanding (expanded), everywhere can be touch
     // otherwise, only the add button are can be touch
-    if (YES == _expanding) 
+    if (!_isAnimating && YES == _expanding)
     {
         return YES;
     }
@@ -150,6 +145,11 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    // if the menu is animating, prevent toggling
+    if (_isAnimating)
+    {
+        return;
+    }
     self.expanding = !self.isExpanding;
 }
 
