@@ -47,4 +47,6 @@
 @optional
 - (void)awesomeMenuDidFinishAnimationClose:(AwesomeMenu *)menu;
 - (void)awesomeMenuDidFinishAnimationOpen:(AwesomeMenu *)menu;
+- (void)awesomeMenuWillStartAnimationClose:(AwesomeMenu *)menu;
+- (void)awesomeMenuWillStartAnimationOpen:(AwesomeMenu *)menu;
 @end

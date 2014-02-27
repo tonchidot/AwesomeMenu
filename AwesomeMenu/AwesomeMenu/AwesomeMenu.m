@@ -332,7 +332,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     animationgroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animationgroup.delegate = self;
     if(_flag == [_menusArray count] - 1){
-        [animationgroup setValue:@"firstAnimation" forKey:@"id"];
+        [animationgroup setValue:@"expandFirstAnimation" forKey:@"id"];
+    }else if(_flag == 0){
+        [animationgroup setValue:@"expandLastAnimation" forKey:@"id"];
     }
     
     item.layer.opacity = 1.f;
@@ -379,8 +381,10 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     animationgroup.fillMode = kCAFillModeForwards;
     animationgroup.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animationgroup.delegate = self;
-    if(_flag == 0){
-        [animationgroup setValue:@"lastAnimation" forKey:@"id"];
+    if(_flag == [_menusArray count] - 1){
+        [animationgroup setValue:@"closeFirstAnimation" forKey:@"id"];
+    }else if(_flag == 0){
+        [animationgroup setValue:@"closeLastAnimation" forKey:@"id"];
     }
     
     item.layer.opacity = 0.f;
@@ -389,13 +393,25 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 
     _flag --;
 }
+- (void)animationDidStart:(CAAnimation *)anim {
+    if([[anim valueForKey:@"id"] isEqual:@"expandLastAnimation"]) {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(awesomeMenuWillStartAnimationOpen:)]){
+            [self.delegate awesomeMenuWillStartAnimationOpen:self];
+        }
+    }
+    if([[anim valueForKey:@"id"] isEqual:@"closeFirstAnimation"]) {
+        if(self.delegate && [self.delegate respondsToSelector:@selector(awesomeMenuWillStartAnimationClose:)]){
+            [self.delegate awesomeMenuWillStartAnimationClose:self];
+        }
+    }
+}
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    if([[anim valueForKey:@"id"] isEqual:@"lastAnimation"]) {
+    if([[anim valueForKey:@"id"] isEqual:@"closeLastAnimation"]) {
         if(self.delegate && [self.delegate respondsToSelector:@selector(awesomeMenuDidFinishAnimationClose:)]){
             [self.delegate awesomeMenuDidFinishAnimationClose:self];
         }
     }
-    if([[anim valueForKey:@"id"] isEqual:@"firstAnimation"]) {
+    if([[anim valueForKey:@"id"] isEqual:@"expandFirstAnimation"]) {
         if(self.delegate && [self.delegate respondsToSelector:@selector(awesomeMenuDidFinishAnimationOpen:)]){
             [self.delegate awesomeMenuDidFinishAnimationOpen:self];
         }
