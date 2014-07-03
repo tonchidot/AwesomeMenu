@@ -11,6 +11,7 @@
 
 @protocol AwesomeMenuDelegate;
 
+typedef CGPoint (^AwesomeMenuPointMakeBlock)(int itemIndex, int itemCount, CGPoint originPoint, CGFloat radius, CGFloat wholeAngle);
 
 @interface AwesomeMenu : UIView <AwesomeMenuItemDelegate>
 
@@ -35,6 +36,8 @@
 @property (nonatomic, assign) CGFloat animationDuration;
 
 @property (nonatomic, strong) AwesomeMenuItem *startButton;
+
+@property (nonatomic, copy) AwesomeMenuPointMakeBlock pointMakeBlock;
 
 - (id)initWithFrame:(CGRect)frame startItem:(AwesomeMenuItem*)startItem optionMenus:(NSArray *)aMenusArray;
 - (void)expand;

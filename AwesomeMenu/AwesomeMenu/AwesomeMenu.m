@@ -71,6 +71,11 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         self.closeRotation = kAwesomeMenuDefaultCloseRotation;
         self.animationDuration = kAwesomeMenuDefaultAnimationDuration;
         
+        self.pointMakeBlock = ^(int itemIndex, int itemCount, CGPoint originPoint, CGFloat radius, CGFloat wholeAngle) {
+            return CGPointMake(originPoint.x + radius * sinf(itemIndex * wholeAngle / (itemCount - 1)),
+                               originPoint.y - radius * cosf(itemIndex * wholeAngle / (itemCount - 1)));
+        };
+        
         self.menusArray = aMenusArray;
         
         // assign startItem to "Add" Button.
@@ -245,12 +250,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         if (menuWholeAngle >= M_PI * 2) {
             menuWholeAngle = menuWholeAngle - menuWholeAngle / count;
         }
-        CGPoint endPoint = CGPointMake(startPoint.x + endRadius * sinf(i * menuWholeAngle / (count - 1)), startPoint.y - endRadius * cosf(i * menuWholeAngle / (count - 1)));
-        item.endPoint = RotateCGPointAroundCenter(endPoint, startPoint, rotateAngle);
-        CGPoint nearPoint = CGPointMake(startPoint.x + nearRadius * sinf(i * menuWholeAngle / (count - 1)), startPoint.y - nearRadius * cosf(i * menuWholeAngle / (count - 1)));
-        item.nearPoint = RotateCGPointAroundCenter(nearPoint, startPoint, rotateAngle);
-        CGPoint farPoint = CGPointMake(startPoint.x + farRadius * sinf(i * menuWholeAngle / (count - 1)), startPoint.y - farRadius * cosf(i * menuWholeAngle / (count - 1)));
-        item.farPoint = RotateCGPointAroundCenter(farPoint, startPoint, rotateAngle);  
+        item.endPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, startPoint, endRadius, menuWholeAngle), startPoint, rotateAngle);
+        item.nearPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, startPoint, nearRadius, menuWholeAngle), startPoint, rotateAngle);
+        item.farPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, startPoint, farRadius, menuWholeAngle), startPoint, rotateAngle);
         item.center = item.startPoint;
         item.layer.opacity = 0.f;
         item.delegate = self;
