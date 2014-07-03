@@ -71,10 +71,10 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         self.closeRotation = kAwesomeMenuDefaultCloseRotation;
         self.animationDuration = kAwesomeMenuDefaultAnimationDuration;
         
-        self.pointMakeBlock = ^(int itemIndex, int itemCount, AwesomeMenu* aweSomeMenu, AwesomeMenuPointMakeAt pointAt) {
-            CGFloat radius = [aweSomeMenu radiusOfPointAt:pointAt];
-            return CGPointMake(aweSomeMenu.startPoint.x + radius * sinf(itemIndex * aweSomeMenu.menuWholeAngle / (itemCount - 1)),
-                               aweSomeMenu.startPoint.y - radius * cosf(itemIndex * aweSomeMenu.menuWholeAngle / (itemCount - 1)));
+        self.pointMakeBlock = ^(int itemIndex, int itemCount, AwesomeMenu* awesomeMenu, AwesomeMenuPointMakeAt pointAt) {
+            CGFloat radius = [awesomeMenu radiusOfPointAt:pointAt];
+            return CGPointMake(awesomeMenu.startPoint.x + radius * sinf(itemIndex * awesomeMenu.menuWholeAngle / (itemCount - 1)),
+                               awesomeMenu.startPoint.y - radius * cosf(itemIndex * awesomeMenu.menuWholeAngle / (itemCount - 1)));
         };
         
         self.menusArray = aMenusArray;

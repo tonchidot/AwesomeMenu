@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, AwesomeMenuPointMakeAt) {
     KAwesomeMenuPointMakeAtFarPoint,
 };
 
-typedef CGPoint (^AwesomeMenuPointMakeBlock)(int itemIndex, int itemCount, AwesomeMenu *aweSomeMenu, AwesomeMenuPointMakeAt pointAt);
+typedef CGPoint (^AwesomeMenuPointMakeBlock)(int itemIndex, int itemCount, AwesomeMenu *awesomeMenu, AwesomeMenuPointMakeAt pointAt);
 
 @interface AwesomeMenu : UIView <AwesomeMenuItemDelegate>
 
