@@ -71,9 +71,10 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         self.closeRotation = kAwesomeMenuDefaultCloseRotation;
         self.animationDuration = kAwesomeMenuDefaultAnimationDuration;
         
-        self.pointMakeBlock = ^(int itemIndex, int itemCount, CGPoint originPoint, CGFloat radius, CGFloat wholeAngle) {
-            return CGPointMake(originPoint.x + radius * sinf(itemIndex * wholeAngle / (itemCount - 1)),
-                               originPoint.y - radius * cosf(itemIndex * wholeAngle / (itemCount - 1)));
+        self.pointMakeBlock = ^(int itemIndex, int itemCount, AwesomeMenu* aweSomeMenu, AwesomeMenuPointMakeAt pointAt) {
+            CGFloat radius = [aweSomeMenu radiusOfPointAt:pointAt];
+            return CGPointMake(aweSomeMenu.startPoint.x + radius * sinf(itemIndex * aweSomeMenu.menuWholeAngle / (itemCount - 1)),
+                               aweSomeMenu.startPoint.y - radius * cosf(itemIndex * aweSomeMenu.menuWholeAngle / (itemCount - 1)));
         };
         
         self.menusArray = aMenusArray;
@@ -173,6 +174,18 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     self.expanding = NO;
 }
 
+- (CGFloat)radiusOfPointAt:(AwesomeMenuPointMakeAt)pointAt
+{
+    switch (pointAt) {
+        case kAwesomeMenuPointMakeAtEndPoint:
+            return endRadius;
+        case kAwesomeMenuPointMakeAtNearPoint:
+            return nearRadius;
+        case KAwesomeMenuPointMakeAtFarPoint:
+            return farRadius;
+    }
+}
+
 #pragma mark - AwesomeMenuItem delegates
 - (void)AwesomeMenuItemTouchesBegan:(AwesomeMenuItem *)item
 {
@@ -219,7 +232,7 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 
 #pragma mark - Instant methods
 - (void)setMenusArray:(NSArray *)aMenusArray
-{	
+{
     if (aMenusArray == _menusArray)
     {
         return;
@@ -250,9 +263,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         if (menuWholeAngle >= M_PI * 2) {
             menuWholeAngle = menuWholeAngle - menuWholeAngle / count;
         }
-        item.endPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, startPoint, endRadius, menuWholeAngle), startPoint, rotateAngle);
-        item.nearPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, startPoint, nearRadius, menuWholeAngle), startPoint, rotateAngle);
-        item.farPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, startPoint, farRadius, menuWholeAngle), startPoint, rotateAngle);
+        item.endPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, self, kAwesomeMenuPointMakeAtEndPoint), startPoint, rotateAngle);
+        item.nearPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, self, kAwesomeMenuPointMakeAtNearPoint), startPoint, rotateAngle);
+        item.farPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, self, KAwesomeMenuPointMakeAtFarPoint), startPoint, rotateAngle);
         item.center = item.startPoint;
         item.layer.opacity = 0.f;
         item.delegate = self;
