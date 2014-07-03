@@ -11,6 +11,15 @@
 
 @protocol AwesomeMenuDelegate;
 
+@class AwesomeMenu;
+
+typedef NS_ENUM(NSUInteger, AwesomeMenuPointMakeAt) {
+    kAwesomeMenuPointMakeAtEndPoint,
+    kAwesomeMenuPointMakeAtNearPoint,
+    KAwesomeMenuPointMakeAtFarPoint,
+};
+
+typedef CGPoint (^AwesomeMenuPointMakeBlock)(int itemIndex, int itemCount, AwesomeMenu *awesomeMenu, AwesomeMenuPointMakeAt pointAt);
 
 @interface AwesomeMenu : UIView <AwesomeMenuItemDelegate>
 
@@ -36,9 +45,12 @@
 
 @property (nonatomic, strong) AwesomeMenuItem *startButton;
 
+@property (nonatomic, copy) AwesomeMenuPointMakeBlock pointMakeBlock;
+
 - (id)initWithFrame:(CGRect)frame startItem:(AwesomeMenuItem*)startItem optionMenus:(NSArray *)aMenusArray;
 - (void)expand;
 - (void)shrink;
+- (CGFloat)radiusOfPointAt:(AwesomeMenuPointMakeAt)pointAt;
 
 @end
 
