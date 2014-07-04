@@ -22,14 +22,6 @@ static CGFloat const kAwesomeMenuDefaultCloseRotation = M_PI * 2;
 static CGFloat const kAwesomeMenuDefaultAnimationDuration = 0.5f;
 static CGFloat const kAwesomeMenuStartMenuDefaultAnimationDuration = 0.3f;
 
-static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float angle)
-{
-    CGAffineTransform translation = CGAffineTransformMakeTranslation(center.x, center.y);
-    CGAffineTransform rotation = CGAffineTransformMakeRotation(angle);
-    CGAffineTransform transformGroup = CGAffineTransformConcat(CGAffineTransformConcat(CGAffineTransformInvert(translation), rotation), translation);
-    return CGPointApplyAffineTransform(point, transformGroup);    
-}
-
 @interface AwesomeMenu ()
 - (void)_expand;
 - (void)_close;
@@ -73,8 +65,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         
         self.pointMakeBlock = ^(int itemIndex, int itemCount, AwesomeMenu* awesomeMenu, AwesomeMenuPointMakeAt pointAt) {
             CGFloat radius = [awesomeMenu radiusOfPointAt:pointAt];
-            return CGPointMake(awesomeMenu.startPoint.x + radius * sinf(itemIndex * awesomeMenu.menuWholeAngle / (itemCount - 1)),
-                               awesomeMenu.startPoint.y - radius * cosf(itemIndex * awesomeMenu.menuWholeAngle / (itemCount - 1)));
+            CGPoint beforeRotatePoint = CGPointMake(awesomeMenu.startPoint.x + radius * sinf(itemIndex * awesomeMenu.menuWholeAngle / (itemCount - 1)),
+                                                    awesomeMenu.startPoint.y - radius * cosf(itemIndex * awesomeMenu.menuWholeAngle / (itemCount - 1)));
+            return [awesomeMenu rotateCGPointAroundCenter:beforeRotatePoint center:awesomeMenu.startPoint angle:awesomeMenu.rotateAngle];
         };
         
         self.menusArray = aMenusArray;
@@ -186,6 +179,14 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
     }
 }
 
+- (CGPoint)rotateCGPointAroundCenter:(CGPoint)point center:(CGPoint)center angle:(float)angle
+{
+    CGAffineTransform translation = CGAffineTransformMakeTranslation(center.x, center.y);
+    CGAffineTransform rotation = CGAffineTransformMakeRotation(angle);
+    CGAffineTransform transformGroup = CGAffineTransformConcat(CGAffineTransformConcat(CGAffineTransformInvert(translation), rotation), translation);
+    return CGPointApplyAffineTransform(point, transformGroup);
+}
+
 #pragma mark - AwesomeMenuItem delegates
 - (void)AwesomeMenuItemTouchesBegan:(AwesomeMenuItem *)item
 {
@@ -263,9 +264,9 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         if (menuWholeAngle >= M_PI * 2) {
             menuWholeAngle = menuWholeAngle - menuWholeAngle / count;
         }
-        item.endPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, self, kAwesomeMenuPointMakeAtEndPoint), startPoint, rotateAngle);
-        item.nearPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, self, kAwesomeMenuPointMakeAtNearPoint), startPoint, rotateAngle);
-        item.farPoint = RotateCGPointAroundCenter(self.pointMakeBlock(i, count, self, KAwesomeMenuPointMakeAtFarPoint), startPoint, rotateAngle);
+        item.endPoint = self.pointMakeBlock(i, count, self, kAwesomeMenuPointMakeAtEndPoint);
+        item.nearPoint = self.pointMakeBlock(i, count, self, kAwesomeMenuPointMakeAtNearPoint);
+        item.farPoint = self.pointMakeBlock(i, count, self, KAwesomeMenuPointMakeAtFarPoint);
         item.center = item.startPoint;
         item.layer.opacity = 0.f;
         item.delegate = self;

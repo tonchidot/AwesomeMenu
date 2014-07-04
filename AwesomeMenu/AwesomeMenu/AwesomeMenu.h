@@ -51,6 +51,7 @@ typedef CGPoint (^AwesomeMenuPointMakeBlock)(int itemIndex, int itemCount, Aweso
 - (void)expand;
 - (void)shrink;
 - (CGFloat)radiusOfPointAt:(AwesomeMenuPointMakeAt)pointAt;
+- (CGPoint)rotateCGPointAroundCenter:(CGPoint)point center:(CGPoint)center angle:(float)angle;
 
 @end
 
